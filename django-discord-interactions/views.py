@@ -1,4 +1,5 @@
-from django.shortcuts import render, JsonResponse
+from django.shortcuts import render
+from django.http import JsonResponse
 from django.conf import settings
 
 import requests, json
@@ -7,12 +8,9 @@ from nacl.encoding import HexEncoder
 from nacl.exceptions import BadSignatureError
 from nacl.signing import VerifyKey
 
-from discord_interactions.models import GlobalCommand,
-                                        GlobalSubCommand,
-                                        GuildCommand,
-                                        GuildSubCommand
+from .models import GlobalCommand, GlobalSubCommand, GuildCommand, GuildSubCommand
 
-from discord_interactions.variables import *
+from .variables import *
 
 def verify_key(raw_body: str, signature: str, timestamp: str, client_public_key: str):
     message = timestamp.encode() + raw_body
@@ -27,9 +25,8 @@ def verify_key(raw_body: str, signature: str, timestamp: str, client_public_key:
 
 def get_all_commands(request):
     if request.method == 'GET':
-        with requests.get('https://discord.com/api/v8/applications/{}/commands'.format(settings.DISCORD_INTERACTION_APPLICATION_ID)) as r:
-            data = r.json()
-            return JsonResponse(data)
+        with requests.get(InteractionEndPoint.GLOBAL_URL, headers=InteractionEndPoint.headers) as r:
+            return JsonResponse(r.json(), safe=False)
 
 def interactions(request):
 
