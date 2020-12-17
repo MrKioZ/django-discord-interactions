@@ -32,3 +32,6 @@ DISCORD_INTERACTION_BOT_TOKEN = ''
 
 ## TODO
 - [ ] Convert Application into reusable application
+- [x] Implement Reusable functions
+- [ ] Support Guild Command
+- [ ] Support Multiple Applications at once
